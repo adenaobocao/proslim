@@ -1207,17 +1207,42 @@ h1, h2, h3 {
   }
 
   /* Fix mobile padding global */
-  .container { padding: 0 24px; }
+  .container { padding: 0 28px; }
 
-  .hero h1 { font-size: clamp(2rem, 8vw, 3.2rem); }
+  .hero h1 { font-size: clamp(1.8rem, 7vw, 2.8rem); }
   .hero-accent { display: none; }
   .hero-content { padding-right: 0; }
-  .hero-actions { flex-direction: column; align-items: stretch; }
+  .hero-desc { font-size: 0.95rem; }
+
+  /* Botoes menores e centralizados */
+  .hero-actions {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
   .hero-actions .btn-primary,
-  .hero-actions .btn-ghost { justify-content: center; text-align: center; }
+  .hero-actions .btn-ghost {
+    justify-content: center;
+    text-align: center;
+    width: auto;
+    min-width: 220px;
+    padding: 14px 32px;
+    font-size: 0.84rem;
+  }
 
   .about-grid { grid-template-columns: 1fr; }
-  .about-image { max-height: 400px; position: relative; min-height: 300px; border-radius: 8px; overflow: hidden; }
+  .about-image {
+    max-height: 360px;
+    min-height: 280px;
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .about-photo {
+    object-position: center center;
+  }
 
   .services-grid { grid-template-columns: 1fr; }
   .service-card { aspect-ratio: 16/9; }
@@ -1242,6 +1267,7 @@ h1, h2, h3 {
   .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
 
   .cta-actions { flex-direction: column; align-items: center; }
+  .cta .btn-primary { padding: 14px 32px; font-size: 0.86rem; width: auto; min-width: 220px; }
 
   .logo-text { font-size: 1.8rem; }
 }
