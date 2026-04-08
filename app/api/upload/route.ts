@@ -29,6 +29,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Tipo de arquivo invalido. Use JPG, PNG ou WebP.' }, { status: 400 })
   }
 
+  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+    return NextResponse.json({ error: 'Storage nao configurado. Adicione BLOB_READ_WRITE_TOKEN no Vercel.' }, { status: 503 })
+  }
+
   const timestamp = Date.now()
   const ext = file.name.split('.').pop() || 'jpg'
   const pathname = `portfolio/${category}/${timestamp}.${ext}`

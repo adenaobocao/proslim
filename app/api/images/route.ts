@@ -9,23 +9,32 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 })
   }
 
+  // Se o Blob nao esta configurado, retorna lista vazia (login funciona)
+  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+    return NextResponse.json({ images: [] })
+  }
+
   const { searchParams } = new URL(req.url)
   const category = searchParams.get('category') || ''
 
   const prefix = category ? `portfolio/${category}/` : 'portfolio/'
 
-  const { blobs } = await list({ prefix })
+  try {
+    const { blobs } = await list({ prefix })
 
-  const images = blobs.map((blob) => {
-    const parts = blob.pathname.split('/')
-    return {
-      url: blob.url,
-      pathname: blob.pathname,
-      category: parts[1] || 'geral',
-      uploadedAt: blob.uploadedAt,
-      size: blob.size,
-    }
-  })
+    const images = blobs.map((blob) => {
+      const parts = blob.pathname.split('/')
+      return {
+        url: blob.url,
+        pathname: blob.pathname,
+        category: parts[1] || 'geral',
+        uploadedAt: blob.uploadedAt,
+        size: blob.size,
+      }
+    })
 
-  return NextResponse.json({ images })
+    return NextResponse.json({ images })
+  } catch {
+    return NextResponse.json({ images: [] })
+  }
 }
