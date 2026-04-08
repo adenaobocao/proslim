@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 /* ─── SVG Icons ─── */
 const StarIcon = () => (
@@ -19,20 +19,30 @@ const WhatsAppIcon = () => (
   <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.612.612l4.458-1.495A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
 )
 
-const WHATSAPP_NUMBER = '55SEUNUMERO'
+const WHATSAPP_NUMBER = '5542998264541'
 const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMBER}`
 const INSTAGRAM_LINK = 'https://www.instagram.com/pro_slim_moveis/'
 const FACEBOOK_LINK = 'https://www.facebook.com/profile.php?id=100058505515523'
 
+const ABOUT_IMAGES = ['/sobre-cozinha.png', '/sobre-showroom.png']
+
 export default function HomePage() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
-  const navRef = useRef<HTMLElement>(null)
+  const [aboutImg, setAboutImg] = useState(0)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60)
     window.addEventListener('scroll', onScroll)
     return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  // Rotate about images
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAboutImg((prev) => (prev + 1) % ABOUT_IMAGES.length)
+    }, 5000)
+    return () => clearInterval(interval)
   }, [])
 
   useEffect(() => {
@@ -61,7 +71,7 @@ export default function HomePage() {
   return (
     <>
       {/* ─── NAVIGATION ─── */}
-      <nav ref={navRef} className={`nav${scrolled ? ' scrolled' : ''}`}>
+      <nav className={`nav${scrolled ? ' scrolled' : ''}`}>
         <div className="container nav-inner">
           <a href="#" className="nav-logo" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }) }}>
             <div>
@@ -72,20 +82,26 @@ export default function HomePage() {
               <span className="logo-subtitle">Moveis Planejados</span>
             </div>
           </a>
-          <ul className={`nav-links${menuOpen ? ' open' : ''}`} id="navLinks">
-            <li><a href="#sobre" onClick={(e) => { e.preventDefault(); scrollTo('sobre') }}>Sobre</a></li>
-            <li><a href="#ambientes" onClick={(e) => { e.preventDefault(); scrollTo('ambientes') }}>Ambientes</a></li>
-            <li><a href="#projetos" onClick={(e) => { e.preventDefault(); scrollTo('projetos') }}>Projetos</a></li>
-            <li><a href="#processo" onClick={(e) => { e.preventDefault(); scrollTo('processo') }}>Processo</a></li>
-            <li><a href={WHATSAPP_LINK} className="nav-cta" target="_blank" rel="noopener noreferrer">Solicitar Orcamento</a></li>
-          </ul>
-          <button
-            className={`nav-toggle${menuOpen ? ' active' : ''}`}
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Menu"
-          >
-            <span /><span /><span />
-          </button>
+
+          {/* Instagram icon no nav */}
+          <div className="nav-right">
+            <a href={INSTAGRAM_LINK} target="_blank" rel="noopener noreferrer" className="nav-instagram" aria-label="Instagram">
+              <InstagramIcon />
+            </a>
+            <ul className={`nav-links${menuOpen ? ' open' : ''}`} id="navLinks">
+              <li><a href="#sobre" onClick={(e) => { e.preventDefault(); scrollTo('sobre') }}>Sobre</a></li>
+              <li><a href="#ambientes" onClick={(e) => { e.preventDefault(); scrollTo('ambientes') }}>Ambientes</a></li>
+              <li><a href="#processo" onClick={(e) => { e.preventDefault(); scrollTo('processo') }}>Processo</a></li>
+              <li><a href={WHATSAPP_LINK} className="nav-cta" target="_blank" rel="noopener noreferrer">Solicitar Orcamento</a></li>
+            </ul>
+            <button
+              className={`nav-toggle${menuOpen ? ' active' : ''}`}
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-label="Menu"
+            >
+              <span /><span /><span />
+            </button>
+          </div>
         </div>
       </nav>
 
@@ -103,11 +119,11 @@ export default function HomePage() {
           </p>
           <div className="hero-actions">
             <a href={WHATSAPP_LINK} className="btn-primary" target="_blank" rel="noopener noreferrer">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.612.612l4.458-1.495A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
               Fale Conosco
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
-            <a href="#projetos" className="btn-ghost" onClick={(e) => { e.preventDefault(); scrollTo('projetos') }}>
-              Ver Projetos
+            <a href="#ambientes" className="btn-ghost" onClick={(e) => { e.preventDefault(); scrollTo('ambientes') }}>
+              Ver Ambientes
             </a>
           </div>
         </div>
@@ -141,11 +157,14 @@ export default function HomePage() {
             </div>
           </div>
           <div className="about-image reveal">
-            <div className="image-placeholder">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-              <span>Foto da equipe ou showroom</span>
-              <span style={{ fontSize: '0.72rem', color: 'var(--gray-400)' }}>Adicione via Dashboard</span>
-            </div>
+            {ABOUT_IMAGES.map((src, i) => (
+              <img
+                key={src}
+                src={src}
+                alt={i === 0 ? 'Cozinha planejada Pro Slim' : 'Showroom Pro Slim Moveis'}
+                className={`about-photo${aboutImg === i ? ' about-photo-active' : ''}`}
+              />
+            ))}
           </div>
         </div>
       </section>
@@ -178,48 +197,8 @@ export default function HomePage() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* ─── PORTFOLIO ─── */}
-      <section className="portfolio" id="projetos">
-        <div className="container">
-          <div className="portfolio-header reveal">
-            <div>
-              <span className="section-label">Portfolio</span>
-              <h2 className="section-title" style={{ color: 'var(--white)' }}>Projetos recentes</h2>
-              <p className="section-desc">Uma selecao dos nossos trabalhos mais recentes. Cada projeto reflete a identidade e as necessidades unicas do cliente.</p>
-            </div>
-          </div>
-          <div className="portfolio-grid">
-            {[
-              'Cozinha Integrada',
-              'Closet Master Suite',
-              'Living Apartamento',
-              'Home Office Executivo',
-              'Banheiro Suite Master',
-            ].map((label, i) => (
-              <div className="portfolio-item reveal" key={i}>
-                <div
-                  className="image-placeholder"
-                  style={{
-                    background: `linear-gradient(135deg, ${
-                      ['var(--navy-800), var(--navy-700)', 'var(--navy-700), var(--navy-600)', '#1a2d4a, var(--navy-700)', 'var(--navy-800), #1a2d4a', 'var(--navy-700), var(--navy-800)'][i]
-                    })`,
-                    color: 'var(--navy-400)',
-                  }}
-                >
-                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-                  <span>{label}</span>
-                </div>
-                <div className="portfolio-item-overlay">
-                  <span className="portfolio-item-label">Ver Projeto</span>
-                </div>
-              </div>
-            ))}
-          </div>
-          {/* Instagram CTA */}
-          <div className="portfolio-instagram reveal">
+          {/* Instagram CTA abaixo dos ambientes */}
+          <div className="portfolio-instagram reveal" style={{ marginTop: 48 }}>
             <a href={INSTAGRAM_LINK} target="_blank" rel="noopener noreferrer">
               <InstagramIcon />
               Veja mais projetos no Instagram
@@ -266,7 +245,7 @@ export default function HomePage() {
             {[
               { icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>, title: 'Garantia Estendida', desc: 'Todos os nossos projetos contam com garantia que cobre materiais e instalacao.' },
               { icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>, title: 'Projeto 3D Gratuito', desc: 'Visualize seu ambiente completo em modelagem tridimensional antes da fabricacao.' },
-              { icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>, title: 'Ate 12x Sem Juros', desc: 'Parcele seu projeto em ate 12x sem juros ou obtenha desconto especial a vista.' },
+              { icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>, title: 'Financiamento e Parcelamento', desc: 'Facilitamos o pagamento do seu projeto com opcoes de financiamento e parcelamento que cabem no seu bolso.' },
               { icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>, title: 'Materiais Premium', desc: 'Utilizamos apenas materiais de primeira linha com certificacao de qualidade.' },
             ].map((d, i) => (
               <div className="diff-item" key={i}>
@@ -349,8 +328,8 @@ export default function HomePage() {
               <ul>
                 <li><a href="#sobre" onClick={(e) => { e.preventDefault(); scrollTo('sobre') }}>Sobre</a></li>
                 <li><a href="#ambientes" onClick={(e) => { e.preventDefault(); scrollTo('ambientes') }}>Ambientes</a></li>
-                <li><a href="#projetos" onClick={(e) => { e.preventDefault(); scrollTo('projetos') }}>Projetos</a></li>
                 <li><a href="#processo" onClick={(e) => { e.preventDefault(); scrollTo('processo') }}>Processo</a></li>
+                <li><a href="#contato" onClick={(e) => { e.preventDefault(); scrollTo('contato') }}>Contato</a></li>
               </ul>
             </div>
             <div className="footer-col">
